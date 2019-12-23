@@ -5,29 +5,11 @@
 #ifndef TWS_API_CLIENT_EMUTEX_H
 #define TWS_API_CLIENT_EMUTEX_H
 
-#if defined(IB_POSIX) && defined(IBAPI_STD_MUTEX)
-# include  <mutex>
-#endif
-
-#include "platformspecific.h"
-#ifdef IB_WIN32
-#include <Windows.h>
-#endif
-
+#include <mutex>
 
 class TWSAPIDLLEXP EMutex
 {
-#if defined(IB_POSIX)
-# if !defined(IBAPI_STD_MUTEX)
-    pthread_mutex_t cs;
-# else
     std::mutex cs;
-# endif
-#elif defined(IB_WIN32)
-    CRITICAL_SECTION cs;
-#else
-#error "Not implemented on this platform"
-#endif
 
 public:
     EMutex();
