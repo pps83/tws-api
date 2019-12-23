@@ -1,7 +1,7 @@
 ﻿/* Copyright (C) 2019 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "EMessage.h"
 #include "ESocket.h"
 
@@ -15,7 +15,7 @@
 ESocket::ESocket() {
 }
 
-void ESocket::fd(int fd) {
+void ESocket::fd(intptr_t fd) {
     m_fd = fd;
 }
 
@@ -64,7 +64,7 @@ int ESocket::send(const char* buf, size_t sz)
 	if( sz <= 0)
 		return 0;
 
-	int nResult = ::send( m_fd, buf, sz, 0);
+	int nResult = ::send( m_fd, buf, (int)sz, 0);
 
 	if( nResult == -1) {
 		return -1;

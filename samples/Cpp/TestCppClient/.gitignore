@@ -1,13 +1,9 @@
 .*
 *~
 *.o
-*.obj
-TestCppClient
-TestCppClient.exe
-Debug
-Release
 *.vcxproj.user
 *.opensdf
 *.sdf
-/Debug/
+*.vcxproj.user
+/msvc.build/
 /ipch/

@@ -1,7 +1,7 @@
 /* Copyright (C) 2019 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "EWrapper.h"
 #include "Order.h"
 #include "Contract.h"
@@ -1751,7 +1751,7 @@ int EDecoder::processConnectAck(const char*& beginPtr, const char* endPtr)
 			m_pEWrapper->connectAck();
 		}
 
-		int processed = ptr - beginPtr;
+		int processed = int(ptr - beginPtr);
 		beginPtr = ptr;
 		return processed;
 	}
@@ -2495,7 +2495,7 @@ int EDecoder::parseAndProcessMsg(const char*& beginPtr, const char* endPtr) {
 		if (!ptr)
 			return 0;
 
-		int processed = ptr - beginPtr;
+		int processed = int(ptr - beginPtr);
 		beginPtr = ptr;
 		return processed;
 	}

@@ -8,11 +8,10 @@
 #include "ETransport.h"
 #include <vector>
 
-class ESocket :
-    public ETransport
+class ESocket : public ETransport
 {
-    int m_fd;
-	std::vector<char> m_outBuffer;
+    intptr_t m_fd;
+    std::vector<char> m_outBuffer;
 
     int bufferedSend(const char* buf, size_t sz);
     int send(const char* buf, size_t sz);
@@ -25,7 +24,7 @@ public:
     int send(EMessage *pMsg);
     bool isOutBufferEmpty() const;
     int sendBufferedData();
-    void fd(int fd);
+    void fd(intptr_t fd);
 };
 
 #endif

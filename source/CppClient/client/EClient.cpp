@@ -1,7 +1,7 @@
 /* Copyright (C) 2019 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "EPosixClientSocketPlatform.h"
 
@@ -69,7 +69,7 @@ void EClient::EncodeContract(std::ostream& os, const Contract &contract)
 void EClient::EncodeTagValueList(std::ostream& os, const TagValueListSPtr &tagValueList) 
 {
     std::string tagValueListStr("");
-    const int tagValueListCount = tagValueList.get() ? tagValueList->size() : 0;
+    const int tagValueListCount = tagValueList.get() ? (int)tagValueList->size() : 0;
 
     if (tagValueListCount > 0) {
         for (int i = 0; i < tagValueListCount; ++i) {
@@ -277,7 +277,7 @@ void EClient::reqMktData(TickerId tickerId, const Contract& contract,
     if( contract.secType == "BAG")
     {
         const Contract::ComboLegList* const comboLegs = contract.comboLegs.get();
-        const int comboLegsCount = comboLegs ? comboLegs->size() : 0;
+        const int comboLegsCount = comboLegs ? (int)comboLegs->size() : 0;
         ENCODE_FIELD( comboLegsCount);
         if( comboLegsCount > 0) {
             for( int i = 0; i < comboLegsCount; ++i) {
@@ -527,7 +527,7 @@ void EClient::reqHistoricalData(TickerId tickerId, const Contract& contract,
     if (contract.secType == "BAG")
     {
         const Contract::ComboLegList* const comboLegs = contract.comboLegs.get();
-        const int comboLegsCount = comboLegs ? comboLegs->size() : 0;
+        const int comboLegsCount = comboLegs ? (int)comboLegs->size() : 0;
         ENCODE_FIELD(comboLegsCount);
         if (comboLegsCount > 0) {
             for(int i = 0; i < comboLegsCount; ++i) {
@@ -1266,7 +1266,7 @@ void EClient::placeOrder( OrderId id, const Contract& contract, const Order& ord
 
     if (m_serverVersion < MIN_SERVER_VER_SSHORTX) {
         const Contract::ComboLegList* const comboLegs = contract.comboLegs.get();
-        const int comboLegsCount = comboLegs ? comboLegs->size() : 0;
+        const int comboLegsCount = comboLegs ? (int)comboLegs->size() : 0;
         for( int i = 0; i < comboLegsCount; ++i) {
             const ComboLeg* comboLeg = ((*comboLegs)[i]).get();
             assert( comboLeg);
@@ -1337,7 +1337,7 @@ void EClient::placeOrder( OrderId id, const Contract& contract, const Order& ord
 
     if (m_serverVersion < MIN_SERVER_VER_ORDER_COMBO_LEGS_PRICE && contract.secType == "BAG") {
         const Order::OrderComboLegList* const orderComboLegs = order.orderComboLegs.get();
-        const int orderComboLegsCount = orderComboLegs ? orderComboLegs->size() : 0;
+        const int orderComboLegsCount = orderComboLegs ? (int)orderComboLegs->size() : 0;
         for( int i = 0; i < orderComboLegsCount; ++i) {
             const OrderComboLeg* orderComboLeg = ((*orderComboLegs)[i]).get();
             assert( orderComboLeg);
@@ -1555,7 +1555,7 @@ void EClient::placeOrder( OrderId id, const Contract& contract, const Order& ord
     if( contract.secType == "BAG")
     {
         const Contract::ComboLegList* const comboLegs = contract.comboLegs.get();
-        const int comboLegsCount = comboLegs ? comboLegs->size() : 0;
+        const int comboLegsCount = comboLegs ? (int)comboLegs->size() : 0;
         ENCODE_FIELD( comboLegsCount);
         if( comboLegsCount > 0) {
             for( int i = 0; i < comboLegsCount; ++i) {
@@ -1580,7 +1580,7 @@ void EClient::placeOrder( OrderId id, const Contract& contract, const Order& ord
     if( m_serverVersion >= MIN_SERVER_VER_ORDER_COMBO_LEGS_PRICE && contract.secType == "BAG")
     {
         const Order::OrderComboLegList* const orderComboLegs = order.orderComboLegs.get();
-        const int orderComboLegsCount = orderComboLegs ? orderComboLegs->size() : 0;
+        const int orderComboLegsCount = orderComboLegs ? (int)orderComboLegs->size() : 0;
         ENCODE_FIELD( orderComboLegsCount);
         if( orderComboLegsCount > 0) {
             for( int i = 0; i < orderComboLegsCount; ++i) {
@@ -1593,7 +1593,7 @@ void EClient::placeOrder( OrderId id, const Contract& contract, const Order& ord
 
     if( m_serverVersion >= MIN_SERVER_VER_SMART_COMBO_ROUTING_PARAMS && contract.secType == "BAG") {
         const TagValueList* const smartComboRoutingParams = order.smartComboRoutingParams.get();
-        const int smartComboRoutingParamsCount = smartComboRoutingParams ? smartComboRoutingParams->size() : 0;
+        const int smartComboRoutingParamsCount = smartComboRoutingParams ? (int)smartComboRoutingParams->size() : 0;
         ENCODE_FIELD( smartComboRoutingParamsCount);
         if( smartComboRoutingParamsCount > 0) {
             for( int i = 0; i < smartComboRoutingParamsCount; ++i) {
@@ -1781,7 +1781,7 @@ void EClient::placeOrder( OrderId id, const Contract& contract, const Order& ord
 
         if( !order.algoStrategy.empty()) {
             const TagValueList* const algoParams = order.algoParams.get();
-            const int algoParamsCount = algoParams ? algoParams->size() : 0;
+            const int algoParamsCount = algoParams ? (int)algoParams->size() : 0;
             ENCODE_FIELD( algoParamsCount);
             if( algoParamsCount > 0) {
                 for( int i = 0; i < algoParamsCount; ++i) {

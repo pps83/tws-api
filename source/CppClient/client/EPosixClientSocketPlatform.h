@@ -27,9 +27,9 @@
 		return ( !WSAStartup( MAKEWORD(2, 2), &data));
 	}
 	inline bool SocketsDestroy() { return ( !WSACleanup()); }
-	inline int SocketClose(int sockfd) { return closesocket( sockfd); }
+	inline int SocketClose(intptr_t sockfd) { return closesocket( sockfd); }
 
-	inline bool SetSocketNonBlocking(int sockfd) {
+	inline bool SetSocketNonBlocking(intptr_t sockfd) {
 		unsigned long mode = 1;
 		return ( ioctlsocket( sockfd, FIONBIO, &mode) == 0);
 	}
@@ -48,9 +48,9 @@
 	// helpers
 	inline bool SocketsInit() { return true; }
 	inline bool SocketsDestroy() { return true; }
-	inline int SocketClose(int sockfd) { return close( sockfd); }
+	inline int SocketClose(intptr_t sockfd) { return close( sockfd); }
 
-	inline bool SetSocketNonBlocking(int sockfd) {
+	inline bool SetSocketNonBlocking(intptr_t sockfd) {
 		// get socket flags
 		int flags = fcntl(sockfd, F_GETFL);
 		if (flags == -1)

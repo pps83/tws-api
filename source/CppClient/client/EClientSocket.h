@@ -30,7 +30,7 @@ public:
 	void eDisconnect(bool resetState = true);
 
 	bool isSocketOK() const;
-	int fd() const;
+	intptr_t fd() const;
     bool asyncEConnect() const;
     void asyncEConnect(bool val);
     ESocket *getTransport();
@@ -59,7 +59,7 @@ private:
 
 private:
 
-	std::atomic<int> m_fd;
+	std::atomic<intptr_t> m_fd;
     bool m_allowRedirect;    
     bool m_asyncEConnect;
     EReaderSignal *m_pSignal;

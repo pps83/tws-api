@@ -1,7 +1,7 @@
 ﻿/* Copyright (C) 2019 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Contract.h"
 #include "EDecoder.h"
 #include "EMutex.h"
@@ -123,7 +123,7 @@ bool EReader::processNonBlockingSelect() {
 			FD_SET( m_pClientSocket->fd(), &writeSet);
 		FD_SET( m_pClientSocket->fd(), &errorSet);
 
-		int ret = select( m_pClientSocket->fd() + 1, &readSet, &writeSet, &errorSet, &tval);
+		int ret = select( int(m_pClientSocket->fd() + 1), &readSet, &writeSet, &errorSet, &tval);
 
 		if( ret == 0) { // timeout
 			return false;
@@ -169,7 +169,7 @@ void EReader::onSend() {
 }
 
 void EReader::onReceive() {
-	int nOffset = m_buf.size();
+	int nOffset = (int)m_buf.size();
 
 	m_buf.resize(m_nMaxBufSize);
 	
@@ -215,7 +215,7 @@ EMessage * EReader::readSingleMsg() {
 
 		std::vector<char> buf = std::vector<char>(msgSize);
 
-		if (!bufferedRead(buf.data(), buf.size()))
+		if (!bufferedRead(buf.data(), (unsigned)buf.size()))
 			return 0;
 
 		return new EMessage(buf);

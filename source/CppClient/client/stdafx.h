@@ -6,6 +6,10 @@
 #ifndef TWS_API_CLIENT_STDAFX_H
 #define TWS_API_CLIENT_STDAFX_H
 
+#ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#endif
+
 #include "platformspecific.h"
 
 #include <string>
