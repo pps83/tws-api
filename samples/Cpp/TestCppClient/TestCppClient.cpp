@@ -1929,12 +1929,12 @@ void TestCppClient::newsArticle(int requestId, int articleType, const std::strin
 	if (articleType == 0) {
 		printf("News Article Text (text or html): %s\n", articleText.c_str());
 	} else if (articleType == 1) {
-		std::string path;
-		#if defined(IB_WIN32)
-			TCHAR s[200];
-			GetCurrentDirectory(200, s);
-			path = s + std::string("\\MST$06f53098.pdf");
-		#elif defined(IB_POSIX)
+		#if defined(_WIN32)
+			std::wstring path;
+			WCHAR s[200];
+			GetCurrentDirectoryW(200, s);
+			path = s + std::wstring(L"\\MST$06f53098.pdf");
+		#else
 			char s[1024];
 			if (getcwd(s, sizeof(s)) == NULL) {
 				printf("getcwd() error\n");
@@ -1945,7 +1945,11 @@ void TestCppClient::newsArticle(int requestId, int articleType, const std::strin
 		std::vector<std::uint8_t> bytes = Utils::base64_decode(articleText);
 		std::ofstream outfile(path, std::ios::out | std::ios::binary); 
 		outfile.write((const char*)bytes.data(), bytes.size());
+#if defined(_WIN32)
+		printf("Binary/pdf article was saved to: %ls\n", path.c_str());
+#else
 		printf("Binary/pdf article was saved to: %s\n", path.c_str());
+#endif
 	}
 }
 //! [newsArticle]

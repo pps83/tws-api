@@ -7,7 +7,7 @@
 
 #include <assert.h>
 
-#if defined(IB_POSIX)
+#ifndef _WIN32
 #include <sys/socket.h>
 #endif
 

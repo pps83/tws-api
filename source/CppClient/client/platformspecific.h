@@ -20,7 +20,6 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #include <time.h>
-#define IB_WIN32
 #define atoll _atoi64
 #else
 
@@ -36,7 +35,6 @@
 
 #if defined(_POSIX_THREADS) && (_POSIX_THREADS > 0)
 #include <pthread.h>
-#define IB_POSIX
 #else
 #error "Not supported on this platform"
 #endif
