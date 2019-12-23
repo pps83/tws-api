@@ -7,6 +7,7 @@
 
 #include <atomic>
 #include <deque>
+#include <thread>
 #include "platformspecific.h"
 #include "EDecoder.h"
 #include "EMutex.h"
@@ -25,39 +26,27 @@ class TWSAPIDLLEXP EReader
     EMutex m_csMsgQueue;
     std::vector<char> m_buf;
     std::atomic<bool> m_isAlive;
-#if defined(IB_POSIX)
-    pthread_t m_hReadThread;
-#elif defined(IB_WIN32)
-    HANDLE m_hReadThread;
-#endif
-	unsigned int m_nMaxBufSize;
+    std::thread m_readThread;
+    unsigned int m_nMaxBufSize;
 
-	void onReceive();
-	void onSend();
-	bool bufferedRead(char *buf, unsigned int size);
+    void onReceive();
+    void onSend();
+    bool bufferedRead(char *buf, unsigned int size);
 
 public:
     EReader(EClientSocket *clientSocket, EReaderSignal *signal);
     ~EReader(void);
 
 protected:
-	bool processNonBlockingSelect();
+    bool processNonBlockingSelect();
     std::shared_ptr<EMessage> getMsg(void);
     void readToQueue();
-#if defined(IB_POSIX)
-    static void * readToQueueThread(void * lpParam);
-#elif defined(IB_WIN32)
-    static DWORD WINAPI readToQueueThread(LPVOID lpParam);
-#else
-#   error "Not implemented on this platform"
-#endif
-    
     EMessage * readSingleMsg();
 
 public:
     void processMsgs(void);
-	bool putMessageToQueue();
-	void start();
+    bool putMessageToQueue();
+    void start();
 };
 
 #endif

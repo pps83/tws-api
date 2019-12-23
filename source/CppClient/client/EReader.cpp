@@ -16,59 +16,28 @@
 
 static DefaultEWrapper defaultWrapper;
 
-EReader::EReader(EClientSocket *clientSocket, EReaderSignal *signal)
+EReader::EReader(EClientSocket* clientSocket, EReaderSignal* signal)
 	: processMsgsDecoder_(clientSocket->EClient::serverVersion(), clientSocket->getWrapper(), clientSocket)
-#if defined(IB_POSIX)
-    , m_hReadThread(pthread_self())
-#elif defined(IB_WIN32)
-    , m_hReadThread(0)
-#endif
 {
-		m_isAlive = true;
-        m_pClientSocket = clientSocket;       
-		m_pEReaderSignal = signal;
-		m_nMaxBufSize = IN_BUF_SIZE_DEFAULT;
-		m_buf.reserve(IN_BUF_SIZE_DEFAULT);
+	m_isAlive = true;
+	m_pClientSocket = clientSocket;
+	m_pEReaderSignal = signal;
+	m_nMaxBufSize = IN_BUF_SIZE_DEFAULT;
+	m_buf.reserve(IN_BUF_SIZE_DEFAULT);
 }
 
 EReader::~EReader(void) {
-#if defined(IB_POSIX)
-    if (!pthread_equal(pthread_self(), m_hReadThread)) {
-        m_isAlive = false;
-        m_pClientSocket->eDisconnect();
-	pthread_join(m_hReadThread, NULL);
-    }
-#elif defined(IB_WIN32)
-    if (m_hReadThread) {
-        m_isAlive = false;
-        m_pClientSocket->eDisconnect();
-        WaitForSingleObject(m_hReadThread, INFINITE);
-    }
-#endif
+	if (m_readThread.joinable()) {
+		m_isAlive = false;
+		m_pClientSocket->eDisconnect();
+		m_readThread.join();
+	}
 }
 
 void EReader::start() {
-#if defined(IB_POSIX)
-    pthread_create( &m_hReadThread, NULL, readToQueueThread, this );
-#elif defined(IB_WIN32)
-    m_hReadThread = CreateThread(0, 0, readToQueueThread, this, 0, 0);
-#else
-#   error "Not implemented on this platform"
-#endif
-}
-
-#if defined(IB_POSIX)
-void * EReader::readToQueueThread(void * lpParam)
-#elif defined(IB_WIN32)
-DWORD WINAPI EReader::readToQueueThread(LPVOID lpParam)
-#else
-#   error "Not implemented on this platform"
-#endif
-{
-	EReader *pThis = reinterpret_cast<EReader *>(lpParam);
-
-	pThis->readToQueue();
-	return 0;
+	m_readThread = std::thread([this]() {
+		readToQueue();
+	});
 }
 
 void EReader::readToQueue() {
