@@ -7,25 +7,19 @@
 
 #include "EReaderSignal.h"
 #include <stdexcept>
+#include <mutex>
+#include <condition_variable>
 #include "platformspecific.h"
 
 #if !defined(INFINITE)
 #define INFINITE ((unsigned long)-1)
 #endif
 
-class TWSAPIDLLEXP EReaderOSSignal :
-	public EReaderSignal
+class TWSAPIDLLEXP EReaderOSSignal : public EReaderSignal
 {
-#if defined(IB_POSIX)
-    pthread_condattr_t m_condattr;
-    pthread_cond_t m_evMsgs;
-    pthread_mutex_t m_mutex;
-    bool open;
-#elif defined(IB_WIN32)
-	HANDLE m_evMsgs;
-#else
-#   error "Not implemented on this platform"
-#endif
+    std::mutex mx;
+    std::condition_variable cv;
+    bool signalled;
     unsigned long m_waitTimeout; // in milliseconds
 
 public:
